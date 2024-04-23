@@ -808,6 +808,8 @@ class UnifiCamBase(metaclass=ABCMeta):
                 "features": {},
             },
         )
+    async def process_continuous_move(self, msg: AVClientRequest) -> None:
+        return
 
     def gen_response(
         self, name: str, response_to: int = 0, payload: Optional[dict[str, Any]] = None
@@ -848,6 +850,7 @@ class UnifiCamBase(metaclass=ABCMeta):
                 "UpdateFirmwareRequest",
                 "Reboot",
                 "ubnt_avclient_hello",
+                "ContinuousMove"
             ]
         ):
             return False
@@ -893,6 +896,8 @@ class UnifiCamBase(metaclass=ABCMeta):
             return True
         elif fn == "Reboot":
             return True
+        elif fn == "ContinuousMove":
+            res = await self.process_continuous_move(m)
 
         if res is not None:
             await self.send(res)
